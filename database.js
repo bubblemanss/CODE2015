@@ -5,19 +5,16 @@ var UserDB = mongojs.collection('users'); // contains both normal and investors
 
 // username - string
 // password - string
-// callback - function(User, err)
+// callback - function(User)
 exports.SearchUser = function(username, password, callback) {
   UserDB.findOne({
     'username': username,
     'password': password
   }, function(err, user) {
-    if (!err && user) {
-      callback(user, null);
-    }
-    if (err) {
+    if (err){
       console.log(err);
     }
-    callback(null, err);
+    callback(user);
   });
 }
 
@@ -37,7 +34,7 @@ exports.UsernameExists = function(username, callback) {
 // user - User object
 // isInvestor - boolean
 // callback - function(successful)
-exports.CreateUser = function(user, isInvestor, callback) {
+exports.CreateUser = function(user, callback) {
   //note: if we create a specific _id for each user based on their
   // username and pass, then we can simplify this next part a bit
   // by just attempting an insert (which will fail if _id already exists).
@@ -53,7 +50,7 @@ exports.CreateUser = function(user, isInvestor, callback) {
 }
 
 
-
+/*
 function userToDoc(user, callback) {
   callback({
     'username': user.username,
@@ -77,3 +74,4 @@ function invToDoc(user, callback) {
     'investor': true
   });
 }
+*/
