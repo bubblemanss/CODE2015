@@ -12,7 +12,7 @@ var createUser = function(data){
         person = investor(data);
     }
 
-    mongo.createUser(person); //change to method for creating person
+    mongo.createPerson(person); //change to method for creating person
 }
 
 var searchDB = function(query){

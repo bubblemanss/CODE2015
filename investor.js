@@ -7,9 +7,8 @@ module.exports = function(data){
         email:data['email'],
         firstName:data['firstName'],
         lastName:data['lastName'],
-        education:data['education'],
         industry:data['industry'],
-        resume:data['resume'],
+        company:data['company'],
         links:data['links']
     }
 }
