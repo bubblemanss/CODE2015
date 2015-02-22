@@ -14,7 +14,7 @@ exports.SearchUser = function(username, password, callback) {
     if (err){
       console.log(err);
     }
-    callback(user);
+    return callback(user);
   });
 }
 
@@ -26,8 +26,8 @@ exports.UsernameExists = function(username, callback) {
     'username': username,
   }, function(err, cursor) {
     if (!err && cursor)
-      callback(true);
-    callback(false);
+      return callback(true);
+    return callback(false);
   });
 }
 
@@ -40,13 +40,18 @@ exports.CreateUser = function(user, callback) {
   // by just attempting an insert (which will fail if _id already exists).
   UsernameExists(user.username, function(exists) {
     if (exists) {
-      callback(false);
+      return callback(false);
     } else {
       //Add the user to the database
       UserDB.insert(user)
-      callback(true);
+      return callback(true);
     }
   });
+}
+
+
+exports.Query = function(query, callback) {
+
 }
 
 
