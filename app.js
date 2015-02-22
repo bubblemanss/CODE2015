@@ -12,26 +12,35 @@ var createUser = function(data){
         person = investor(data);
     }
 
-    mongo.createPerson(person); //change to method for creating person
+    return mongo.createPerson(person, function(check){
+        if (check) {
+            return "Created " + person.type;
+        } else {
+            return "Failed to create " + person.type;
+        }
+    }); //change to method for creating person
 }
 
 var searchDB = function(query){
-    return mongo.search(query); //change to method for searching
+    return mongo.search(query, function(data){
+        return data;
+    }); //change to method for searching
 }
 
 var server = http.createServer(function(request, response) {
     var parsedBody = null;
-    var searchData = null;
+    var searchResponse = null;
+    var createResponse = null;
 
     if (request.method == "POST"){
         request.on("data", function(jsonBody){
             parsedBody = JSON.parse(jsonBody);
 
             if (parsedBody.method == "create"){
-                createUser(parsedBody);
+                createResponse = createUser(parsedBody);
             }
             else if (parsedBody.method == "search"){
-                searchData = searchDB(parsedBody);
+                searchResponse = searchDB(parsedBody);
             }
         });
     }
@@ -40,10 +49,10 @@ var server = http.createServer(function(request, response) {
         response.writeHead(200, {"Content-Type": "application/json"});
 
         if (parsedBody.method == "create"){
-            response.write("Created " + parsedBody.type);
+            response.write(JSON.stringify(createResponse));
         }
         else if (parsedBody.method == "search"){
-            response.write(searchData);
+            response.write(JSON.stringify(searchResponse));
         }
 
         response.end();
