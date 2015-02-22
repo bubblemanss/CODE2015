@@ -10,27 +10,27 @@ exports.SearchUser = function(username, password, callback) {
   UserDB.findOne({
     'username': username,
     'password': password
-  }, function(err, document) {
+  }, function(err, user) {
+    if (!err && user) {
+      callback(user, null);
+    }
     if (err) {
       console.log(err);
-      callback(null, err);
     }
-    //TODO: create user using document
-    callback(user, null);
+    callback(null, err);
   });
 }
 
 // username - string
-// callback - function(User, err)
+// callback - function(exists)
 exports.UsernameExists = function(username, callback) {
-  UserDB.findOne({
+  //faster to user find as opposed to findOne?
+  UserDB.find({
     'username': username,
-  }, function(err, document) {
-    if (err) {
-      console.log(err);
-      callback(false, err);
-    }
-    callback((document ? true : false), null);
+  }, function(err, cursor) {
+    if (!err && cursor)
+      callback(true);
+    callback(false);
   });
 }
 
@@ -41,21 +41,12 @@ exports.CreateUser = function(user, isInvestor, callback) {
   //note: if we create a specific _id for each user based on their
   // username and pass, then we can simplify this next part a bit
   // by just attempting an insert (which will fail if _id already exists).
-
-  UsernameExists(user.username, function(exists, err) {
+  UsernameExists(user.username, function(exists) {
     if (exists) {
       callback(false);
     } else {
       //Add the user to the database
-      if (!isInvestor) {
-        userToDoc(user, function(doc) {
-          UserDB.insert(doc)
-        };
-      } else {
-        invToDoc(user, function(doc) {
-          UserDB.insert(doc);
-        })
-      }
+      UserDB.insert(user)
       callback(true);
     }
   });

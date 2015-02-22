@@ -1,12 +1,14 @@
 
-module.exports = function(data){
+exports.new = function(user, pass, email, first, last, industry, company, links){
     return {
-        username:data['user'],
-        password:data['password'],
-        email:data['email'],
-        fullName:data['fullName'],
-        industry:data['industry'],
-        company:data['company'],
-        links:data['links']
+        username: user,
+        password: pass,
+        email: email,
+        first: first,
+        last: last,
+        industry: industry,
+        company: company,
+        links: links
+        investor: true
     }
 }
