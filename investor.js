@@ -8,7 +8,7 @@ exports.new = function(user, pass, email, first, last, industry, company, links)
         last: last,
         industry: industry,
         company: company,
-        links: links
+        links: links,
         investor: true
     }
 }
